@@ -3,34 +3,40 @@ const pool = require('../config/db');
 
 async function calculateRent(bookType, rentalDays) {
     let rentalCharge = 0;
-  
+
     // Calculate the rental charge based on the book type
     switch (bookType.toLowerCase()) {
-      case 'regular':
-        rentalCharge = rentalDays * 1.5;
-        break;
-      case 'novel':
-        rentalCharge = rentalDays * 1.5;
-        break;
-      case 'fiction':
-        rentalCharge = rentalDays * 3;
-        break;
-      default:
-        throw new Error('Invalid book type');
+        case 'regular':
+            if (rentalDays < 2) 
+                rentalCharge = rentalDays * 1;
+            else
+                rentalCharge = 2 + (rentalDays - 2) * 1.5;
+            break;
+        case 'novel':
+            if (rentalDays < 3) 
+                rentalCharge = rentalDays * 4.5;
+            else
+                rentalCharge = 2 + (rentalDays - 2) * 1.5;
+            break;
+        case 'fiction':
+            rentalCharge = rentalDays * 3;
+            break;
+        default:
+            throw new Error('Invalid book type');
     }
-  
+
     // Return the rental charge
     return rentalCharge;
-  }
+}
 
-const calculateCharges = async(customerId) => {
+const calculateCharges = async (customerId) => {
     try {
         // Get the customer's rental information from the database
         const rentalInfo = await pool.query(`SELECT book_id ,book_type, rental_date, return_date FROM rentals WHERE customer_id = ${customerId}`);
 
         let totalCharges = 0;
 
-        
+
         // Calculate charges for each book rented
         for (let i = 0; i < rentalInfo.rows.length; i++) {
             const bookType = rentalInfo.rows[i].book_type;
@@ -40,7 +46,7 @@ const calculateCharges = async(customerId) => {
 
             //const bookCharge = daysRented * 1; // Rs 1 per day
 
-            const bookCharge = calculateRent(bookType,daysRented);
+            const bookCharge = calculateRent(bookType, daysRented);
 
             totalCharges += bookCharge;
         }

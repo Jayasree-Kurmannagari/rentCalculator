@@ -5,13 +5,13 @@ async function test() {
     let totalCharges = await calculateCharges(1);
     console.assert(totalCharges === 0, "Test case 1 passed");
 
-    // Test case 2: Customer with 2 fiction books and 2 novels rental for 5 days
+    // Test case 2: Customer with 1 regular book for 1 day , 1 regular book for 6 days and 2 novels rental for 6 days
     totalCharges = await calculateCharges(2);
-    console.assert(totalCharges === 45, "Test case 2 passed");
+    console.assert(totalCharges === 25, "Test case 2 passed");
 
-    // Test case 3: Customer with 2 regular books rentals for 5 days each
+    // Test case 3: Customer with 2 novel books rentals for 2 days each
     totalCharges = await calculateCharges(3);
-    console.assert(totalCharges === 15, "Test case 3 passed");
+    console.assert(totalCharges === 18, "Test case 3 passed");
 }
 
 test();
